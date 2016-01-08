@@ -10,7 +10,7 @@ output:
 ## Loading and preprocessing the data
 
 
-```{r}
+```{r, warning=FALSE, message=F}
 f <- unz('activity.zip',
          filename='activity.csv')
 d <- read.table(f, header=T, sep=",", stringsAsFactors=F)
@@ -85,14 +85,16 @@ c(mean(dd2$steps, na.rm=T), median(dd2$steps, na.rm=T))
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-Difference between weekday and weekend activity.
+Difference between weekday and weekend activity. Note that the `weekdays` function is locale dependent so we change locale to 'English' which seems to work on Windows at least...
 
 ```{r}
 is.weekend <- function(day) {
     wkday <- weekdays(as.Date(day), T)
-    wkday %in% c("la", "su")
+    wkday %in% c("Sat", "Sun")
 }
 
+
+Sys.setlocale('LC_TIME', 'English')
 dm$weekday <- rep("weekday", length(dm$steps))
 dm$weekday[is.weekend(dm$date)] <- "weekend"
 dm.weekday <- as.factor(dm$weekday)
